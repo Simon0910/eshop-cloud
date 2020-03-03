@@ -1,0 +1,26 @@
+server:
+  port: 8762
+spring:
+  application:
+    name: eshop-product-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    platform: mysql
+    url: jdbc:mysql://192.168.198.1:3306/eshop?useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    hikari:
+      pool-name: DatebookHikariCP
+  rabbitmq:
+    host: 192.168.198.1
+    port: 5672
+    username: admin
+    password: 123456
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.198.1:8761/eureka/
