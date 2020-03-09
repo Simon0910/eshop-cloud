@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.roncoo.eshop</groupId>
-    <artifactId>eshop-clould</artifactId>
+    <artifactId>eshop-cloud</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>eshop-clould</name>
-    <description>eshop-clould</description>
+    <name>eshop-cloud</name>
+    <description>eshop-cloud</description>
 
     <modules>
         <module>eshop-common</module>
