@@ -22,8 +22,8 @@ import java.util.Set;
  * @author Administrator
  */
 @Slf4j
-@Component
-@RabbitListener(queues = "refresh-data-change-queue")
+// @Component
+// @RabbitListener(queues = "refresh-data-change-queue")
 public class RefreshDataChangeQueueReceiver extends DefaultQueuenReceiver {
 
     private Set<Message> dimDataChangeMessageSet = Collections.synchronizedSet(new HashSet<Message>());

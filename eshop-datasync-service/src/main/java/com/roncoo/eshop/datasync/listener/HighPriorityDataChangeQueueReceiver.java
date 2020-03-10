@@ -22,8 +22,8 @@ import java.util.Set;
  * @author Administrator
  */
 @Slf4j
-@Component
-@RabbitListener(queues = "high-priority-data-change-queue")
+// @Component
+// @RabbitListener(queues = "high-priority-data-change-queue")
 public class HighPriorityDataChangeQueueReceiver extends DefaultQueuenReceiver {
 
     private Set<Message> dimDataChangeMessageSet = Collections.synchronizedSet(new HashSet<Message>());

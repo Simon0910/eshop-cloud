@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.common.redis.keys.KeyPrefix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -12,6 +13,7 @@ import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -47,6 +49,20 @@ public class RedisService {
             jedis = jedisPool.getResource();
             String str = jedis.get(prefix.getKeyPrefix() + key);
             return JSONObject.parseObject(str);
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * 获取当个对象
+     */
+    public List<String> mget(String... keys) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            List<String> list = jedis.mget(keys);
+            return list;
         } finally {
             returnToPool(jedis);
         }
