@@ -61,4 +61,14 @@ public class ProductSpecificationController {
         return new ProductSpecification();
     }
 
+    @RequestMapping("/findByProductId")
+    @ResponseBody
+    public ProductSpecification findByProductId(Long productId){
+        try {
+            return productSpecificationService.findByProductId(productId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ProductSpecification();
+    }
 }

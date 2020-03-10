@@ -61,4 +61,15 @@ public class ProductPropertyController {
         return new ProductProperty();
     }
 
+
+    @RequestMapping("/findByProductId")
+    @ResponseBody
+    public ProductProperty findByProductId(Long productId){
+        try {
+            return productPropertyService.findByProductId(productId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ProductProperty();
+    }
 }

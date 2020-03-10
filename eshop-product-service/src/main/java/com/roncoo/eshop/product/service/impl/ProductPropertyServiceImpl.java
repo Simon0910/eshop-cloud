@@ -40,4 +40,9 @@ public class ProductPropertyServiceImpl implements ProductPropertyService {
         return productPropertyMapper.findById(id);
     }
 
+    @Override
+    public ProductProperty findByProductId(Long productId) {
+        return productPropertyMapper.findByProductId(productId);
+    }
+
 }

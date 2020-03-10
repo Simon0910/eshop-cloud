@@ -18,6 +18,7 @@
         <module>eshop-product-service</module>
         <module>eshop-datasync-service</module>
         <module>eshop-dataaggr-service</module>
+        <module>eshop-datalink-service</module>
     </modules>
 
     <parent>
