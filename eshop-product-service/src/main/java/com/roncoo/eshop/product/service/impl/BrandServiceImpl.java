@@ -9,6 +9,8 @@ import com.roncoo.eshop.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BrandServiceImpl implements BrandService {
 
@@ -18,16 +20,19 @@ public class BrandServiceImpl implements BrandService {
     @Autowired
     MessageSender messageSender;
 
+    @Override
     public void add(Brand brand) {
         brandMapper.add(brand);
         messageSender.sendAddMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.BRAND_CHANGE, brand);
     }
 
+    @Override
     public void update(Brand brand) {
         brandMapper.update(brand);
         messageSender.sendUpdateMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.BRAND_CHANGE, brand);
     }
 
+    @Override
     public void delete(Long id) {
         brandMapper.delete(id);
         Brand brand = new Brand();
@@ -35,8 +40,14 @@ public class BrandServiceImpl implements BrandService {
         messageSender.sendDeleteMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.BRAND_CHANGE, brand);
     }
 
+    @Override
     public Brand findById(Long id) {
         return brandMapper.findById(id);
+    }
+
+    @Override
+    public List<Brand> findByIds(String ids) {
+        return brandMapper.findByIds(ids);
     }
 
 }

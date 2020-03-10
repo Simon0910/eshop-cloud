@@ -2,14 +2,17 @@ package com.roncoo.eshop.product.service;
 
 import com.roncoo.eshop.product.model.Brand;
 
+import java.util.List;
+
 public interface BrandService {
 
-    public void add(Brand brand);
+    void add(Brand brand);
 
-    public void update(Brand brand);
+    void update(Brand brand);
 
-    public void delete(Long id);
+    void delete(Long id);
 
-    public Brand findById(Long id);
+    Brand findById(Long id);
 
+    List<Brand> findByIds(String ids);
 }

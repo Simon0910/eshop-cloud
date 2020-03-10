@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/brand")
 public class BrandController {
@@ -61,4 +64,15 @@ public class BrandController {
         return new Brand();
     }
 
+
+    @RequestMapping("/findByIds")
+    @ResponseBody
+    public List<Brand> findByIds(String ids){
+        try {
+            return brandService.findByIds(ids);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<Brand>();
+    }
 }

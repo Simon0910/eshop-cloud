@@ -36,6 +36,7 @@ public class DataChangeQueueReceiver extends DefaultQueuenReceiver {
         try {
             Message message = handlerMessage(msg);
             log.info("【维度数据变更消息被放入内存Set中】,message = {}", JSONObject.toJSONString(message));
+            // todo 已经和 BatchProcessBrandDataChangeHandler  processAddOrUpdate方法 产生了无法解决的地步
             dimDataChangeMessageSet.add(message);
         } catch (Exception e) {
             log.error("error - msg = {}, e : {}", msg, e);
