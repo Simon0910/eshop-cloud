@@ -39,6 +39,6 @@ public class ProcessProductSpecificationDataChangeHandler extends DefaultProcess
 
     private JSONObject findById(String id) {
         String productSpecificationJsonStr = eshopProductService.findProductSpecificationById(Long.parseLong(id));
-        return  JSONObject.parseObject(productSpecificationJsonStr);
+        return JSONObject.parseObject(productSpecificationJsonStr);
     }
 }

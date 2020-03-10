@@ -12,7 +12,7 @@ public class ProductKey extends BasePrefix {
         super(expireSeconds, prefix);
     }
 
-    public static ProductKey aggregationKey = new ProductKey( "aggregationKey:");
+    public static ProductKey aggregationKey = new ProductKey("aggregationKey:");
     public static ProductKey productKey = new ProductKey("product:");
     public static ProductKey productIntroKey = new ProductKey("productIntro:");
     public static ProductKey productSpecificationKey = new ProductKey("productSpecification:");

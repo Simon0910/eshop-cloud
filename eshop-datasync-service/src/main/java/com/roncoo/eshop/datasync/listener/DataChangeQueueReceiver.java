@@ -1,17 +1,16 @@
 package com.roncoo.eshop.datasync.listener;
 
 import com.alibaba.fastjson.JSONObject;
+import com.roncoo.eshop.common.rabbitmq.RabbitQueue;
 import com.roncoo.eshop.common.rabbitmq.message.Message;
-import com.roncoo.eshop.datasync.handler.DefaultProcessDataChangeHandler;
-import com.roncoo.eshop.datasync.service.EshopProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.JedisPool;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 数据同步服务，就是获取各种原子数据的变更消息
@@ -25,28 +24,42 @@ import java.util.Map;
 @Slf4j
 @Component
 @RabbitListener(queues = "data-change-queue")
-public class DataChangeQueueReceiver {
-    @Autowired
-    private EshopProductService eshopProductService;
-    @Autowired
-    private JedisPool jedisPool;
-    @Autowired
-    private Map<String, DefaultProcessDataChangeHandler> handlers;
+public class DataChangeQueueReceiver extends DefaultQueuenReceiver {
+    private Set<Message> dimDataChangeMessageSet = Collections.synchronizedSet(new HashSet<Message>());
 
+    public DataChangeQueueReceiver() {
+        new Thread(new SendThread()).start();
+    }
 
     @RabbitHandler
     public void process(String msg) {
         try {
-            // 对这个message进行解析
-            Message message = JSONObject.parseObject(msg, Message.class);
-            // 先获取data_type
-            String dataType = message.getDataType();
-            DefaultProcessDataChangeHandler handler = handlers.get(DefaultProcessDataChangeHandler.alias(dataType));
-            handler.process(message);
+            Message message = handlerMessage(msg);
+            log.info("【维度数据变更消息被放入内存Set中】,message = {}", JSONObject.toJSONString(message));
+            dimDataChangeMessageSet.add(message);
         } catch (Exception e) {
             log.error("error - msg = {}, e : {}", msg, e);
             return;
         }
     }
 
+    private class SendThread extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                if (!dimDataChangeMessageSet.isEmpty()) {
+                    for (Message message : dimDataChangeMessageSet) {
+                        messageSender.send(RabbitQueue.AGGR_DATA_CHANGE_QUEUE, message);
+                        log.info("【将去重后的维度数据变更消息发送到下一个queue】,message = {}", JSONObject.toJSONString(message));
+                    }
+                    dimDataChangeMessageSet.clear();
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

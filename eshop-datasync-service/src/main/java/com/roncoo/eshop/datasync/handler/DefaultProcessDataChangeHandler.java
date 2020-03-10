@@ -1,23 +1,22 @@
 package com.roncoo.eshop.datasync.handler;
 
 import com.roncoo.eshop.common.biz.AbstractProcessDataChangeMessage;
-import com.roncoo.eshop.common.rabbitmq.RabbitQueue;
 import com.roncoo.eshop.common.rabbitmq.message.EventType;
 import com.roncoo.eshop.common.rabbitmq.message.Message;
 import com.roncoo.eshop.datasync.service.EshopProductService;
-import com.roncoo.eshop.mq.MessageSender;
 import com.roncoo.eshop.redis.RedisService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class DefaultProcessDataChangeHandler extends AbstractProcessDataChangeMessage {
     @Autowired
     EshopProductService eshopProductService;
     @Autowired
     RedisService redisService;
-    @Autowired
-    MessageSender messageSender;
+
 
     @Override
     protected void processAddOrUpdate(Message message) {
@@ -36,6 +35,5 @@ public class DefaultProcessDataChangeHandler extends AbstractProcessDataChangeMe
         } else if (EventType.DELETE.equals(eventType)) {
             processDelete(message);
         }
-        messageSender.send(RabbitQueue.AGGR_DATA_CHANGE_QUEUE, message);
     }
 }

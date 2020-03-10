@@ -1,8 +1,6 @@
 package com.roncoo.eshop.mq;
 
 import com.alibaba.fastjson.JSONObject;
-import com.roncoo.eshop.common.BaseEntity;
-import com.roncoo.eshop.common.rabbitmq.message.EventType;
 import com.roncoo.eshop.common.rabbitmq.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

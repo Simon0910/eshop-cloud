@@ -10,5 +10,4 @@ public class ProductIntro extends BaseEntity {
     private Long productId;
 
 
-
 }

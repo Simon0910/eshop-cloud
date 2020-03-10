@@ -38,6 +38,6 @@ public class ProcessProductPropertyDataChangeHandler extends DefaultProcessDataC
     }
 
     private JSONObject findById(String id) {
-        return  JSONObject.parseObject(eshopProductService.findProductPropertyById(Long.parseLong(id)));
+        return JSONObject.parseObject(eshopProductService.findProductPropertyById(Long.parseLong(id)));
     }
 }
