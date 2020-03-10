@@ -1,4 +1,4 @@
-package com.roncoo.eshop.datasync.biz;
+package com.roncoo.eshop.datasync.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.common.Business;
@@ -7,6 +7,7 @@ import com.roncoo.eshop.common.rabbitmq.message.Message;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 
 @Component(value = "processProductSpecificationDataChangeHandler")
 public class ProcessProductSpecificationDataChangeHandler extends DefaultProcessDataChangeHandler {
@@ -23,19 +24,21 @@ public class ProcessProductSpecificationDataChangeHandler extends DefaultProcess
         String productId = dataJSONObject.getString("productId");
         redisService.set(ProductKey.productSpecificationKey, productId, dataJSONObject.toJSONString());
         message.setDataType(Business.PRODUCT_CHANGE);
-        message.setId(productId);
     }
 
     @Override
     protected void processDelete(Message message) {
         JSONObject dataJSONObject = findById(message.getId());
-        String productId = dataJSONObject.getString("productId");
-        redisService.delete(ProductKey.productSpecificationKey, productId);
+        if (dataJSONObject == null) {
+            Map<String, Object> data = (Map<String, Object>) message.getData();
+            String productId = String.valueOf(data.get("productId")); // todo 第一次删除不掉, 就没有机会删除了
+            redisService.delete(ProductKey.productSpecificationKey, productId);
+        }
         message.setDataType(Business.PRODUCT_CHANGE);
-        message.setId(productId);
     }
 
     private JSONObject findById(String id) {
-        return  JSONObject.parseObject(eshopProductService.findProductSpecificationById(Long.parseLong(id)));
+        String productSpecificationJsonStr = eshopProductService.findProductSpecificationById(Long.parseLong(id));
+        return  JSONObject.parseObject(productSpecificationJsonStr);
     }
 }

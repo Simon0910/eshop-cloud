@@ -1,4 +1,4 @@
-package com.roncoo.eshop.datasync.biz;
+package com.roncoo.eshop.datasync.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.common.Business;

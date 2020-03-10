@@ -10,4 +10,5 @@ public class BaseEntity extends AbstractMessage {
     protected String findId() {
         return String.valueOf(id);
     }
+
 }

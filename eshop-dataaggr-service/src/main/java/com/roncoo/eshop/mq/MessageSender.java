@@ -17,19 +17,5 @@ public class MessageSender {
         rabbitMQSender.send(queue, JSONObject.toJSONString(message));
     }
 
-    public void sendAddMessage(String queue, String businessId, BaseEntity entity) {
-        Message message = new Message(EventType.ADD, businessId, entity.messageId());
-        rabbitMQSender.send(queue, JSONObject.toJSONString(message));
-    }
-
-    public void sendUpdateMessage(String queue, String businessId, BaseEntity entity) {
-        Message message = new Message(EventType.UPDATE, businessId, entity.messageId());
-        rabbitMQSender.send(queue, JSONObject.toJSONString(message));
-    }
-
-    public void sendDeleteMessage(String queue, String businessId, BaseEntity entity) {
-        Message message = new Message(EventType.DELETE, businessId, entity.messageId());
-        rabbitMQSender.send(queue, JSONObject.toJSONString(message));
-    }
 
 }

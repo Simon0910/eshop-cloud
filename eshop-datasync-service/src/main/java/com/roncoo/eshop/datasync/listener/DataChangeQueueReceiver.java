@@ -2,7 +2,7 @@ package com.roncoo.eshop.datasync.listener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.common.rabbitmq.message.Message;
-import com.roncoo.eshop.datasync.biz.DefaultProcessDataChangeHandler;
+import com.roncoo.eshop.datasync.handler.DefaultProcessDataChangeHandler;
 import com.roncoo.eshop.datasync.service.EshopProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;

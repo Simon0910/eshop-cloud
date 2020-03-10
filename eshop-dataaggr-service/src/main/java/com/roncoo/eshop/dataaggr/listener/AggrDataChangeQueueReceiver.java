@@ -3,7 +3,7 @@ package com.roncoo.eshop.dataaggr.listener;
 import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.common.Business;
 import com.roncoo.eshop.common.rabbitmq.message.Message;
-import com.roncoo.eshop.dataaggr.biz.ProductAggregationHandler;
+import com.roncoo.eshop.dataaggr.handler.ProductAggregationHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

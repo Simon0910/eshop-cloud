@@ -1,8 +1,7 @@
-package com.roncoo.eshop.datasync.biz;
+package com.roncoo.eshop.datasync.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.common.Business;
-import com.roncoo.eshop.common.keys.BrandKey;
 import com.roncoo.eshop.common.keys.CategoryKey;
 import com.roncoo.eshop.common.rabbitmq.message.Message;
 import org.springframework.stereotype.Component;

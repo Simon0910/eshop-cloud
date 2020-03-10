@@ -7,6 +7,9 @@ import com.roncoo.eshop.common.rabbitmq.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class MessageSender {
 
@@ -17,18 +20,27 @@ public class MessageSender {
         rabbitMQSender.send(queue, JSONObject.toJSONString(message));
     }
 
-    public void sendAddMessage(String queue, String businessId, BaseEntity entity) {
-        Message message = new Message(EventType.ADD, businessId, entity.messageId());
+    public <T> void sendAddMessage(String queue, String businessId, BaseEntity entity) {
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(entity));
+        Map<String, Object> data = new HashMap<>();
+        data.put("productId", jsonObject.getLongValue("productId"));
+        Message<Map<String, Object>> message = new Message(EventType.ADD, businessId, entity.messageId(), data);
         rabbitMQSender.send(queue, JSONObject.toJSONString(message));
     }
 
     public void sendUpdateMessage(String queue, String businessId, BaseEntity entity) {
-        Message message = new Message(EventType.UPDATE, businessId, entity.messageId());
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(entity));
+        Map<String, Object> data = new HashMap<>();
+        data.put("productId", jsonObject.getLongValue("productId"));
+        Message<Map<String, Object>> message = new Message(EventType.UPDATE, businessId, entity.messageId(), data);
         rabbitMQSender.send(queue, JSONObject.toJSONString(message));
     }
 
     public void sendDeleteMessage(String queue, String businessId, BaseEntity entity) {
-        Message message = new Message(EventType.DELETE, businessId, entity.messageId());
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(entity));
+        Map<String, Object> data = new HashMap<>();
+        data.put("productId", jsonObject.getLongValue("productId"));
+        Message<Map<String, Object>> message = new Message(EventType.DELETE, businessId, entity.messageId(), data);
         rabbitMQSender.send(queue, JSONObject.toJSONString(message));
     }
 

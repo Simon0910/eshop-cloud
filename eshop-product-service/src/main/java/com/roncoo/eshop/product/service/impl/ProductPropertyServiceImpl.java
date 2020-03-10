@@ -20,19 +20,19 @@ public class ProductPropertyServiceImpl implements ProductPropertyService {
 
     public void add(ProductProperty productProperty) {
         productPropertyMapper.add(productProperty);
-        messageSender.sendAddMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.PRODUCT_CHANGE, productProperty);
+        messageSender.sendAddMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.PRODUCT_PROPERTY_CHANGE, productProperty);
     }
 
     public void update(ProductProperty productProperty) {
         productPropertyMapper.update(productProperty);
-        messageSender.sendUpdateMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.PRODUCT_CHANGE, productProperty);
+        messageSender.sendUpdateMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.PRODUCT_PROPERTY_CHANGE, productProperty);
     }
 
     public void delete(Long id) {
         productPropertyMapper.delete(id);
         ProductProperty productProperty = new ProductProperty();
         productProperty.setId(id);
-        messageSender.sendDeleteMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.PRODUCT_CHANGE, productProperty);
+        messageSender.sendDeleteMessage(RabbitQueue.DATA_CHANGE_QUEUE, Business.PRODUCT_PROPERTY_CHANGE, productProperty);
 
     }
 

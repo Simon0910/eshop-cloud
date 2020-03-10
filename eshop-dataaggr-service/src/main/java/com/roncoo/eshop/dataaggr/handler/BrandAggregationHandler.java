@@ -1,4 +1,4 @@
-package com.roncoo.eshop.dataaggr.biz;
+package com.roncoo.eshop.dataaggr.handler;
 
 import com.roncoo.eshop.common.rabbitmq.message.Message;
 
