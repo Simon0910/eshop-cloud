@@ -21,6 +21,7 @@ public class Config {
         config.setTestOnReturn(true);
         config.setBlockWhenExhausted(true);
         config.setMaxWaitMillis(10 * 1000);
-        return new JedisPool(config, "127.0.0.1", 6379);
+        // 主机群
+        return new JedisPool(config, "192.168.198.150", 1111);
     }
 }

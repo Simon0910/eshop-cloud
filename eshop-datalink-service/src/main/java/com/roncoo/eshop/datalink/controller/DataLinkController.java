@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.common.keys.ProductKey;
 import com.roncoo.eshop.datalink.service.EshopProductService;
 import com.roncoo.eshop.redis.RedisService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author lzp on 2020/3/10.
  */
+@Slf4j
 @RestController
 public class DataLinkController {
 
@@ -22,13 +24,14 @@ public class DataLinkController {
     @Autowired
     private RedisService redisService;
 
-    @RequestMapping(value = "getProduct")
+    @RequestMapping(value = "product")
     @ResponseBody
     public String getProduct(Long productId) {
         // 先读本地的ehcache，但是我们这里就不做了，因为之前都演示过了，大家自己做就可以了
 
         // 读redis主集群
         String aggrProductJson = redisService.get(ProductKey.aggregationKey, String.valueOf(productId));
+        log.info("data-link: get aggrProductJson = {}", JSONObject.toJSONString(aggrProductJson));
         if (StringUtils.isBlank(aggrProductJson)) {
             String productDataJSON = eshopProductService.findProductById(productId);
 
@@ -46,7 +49,7 @@ public class DataLinkController {
                 }
 
                 redisService.set(ProductKey.aggregationKey, String.valueOf(productId), productDataJSONObject.toJSONString());
-
+                log.info("data-link: set aggrProductJson = {}", productDataJSONObject.toJSONString());
                 return productDataJSONObject.toJSONString();
             }
         }
