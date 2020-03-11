@@ -7,15 +7,18 @@ import org.apache.ibatis.annotations.*;
 public interface ProductPriceMapper {
 
     @Insert("INSERT INTO product_price(price,product_id) VALUES(#{price},#{productId})")
-    public void add(ProductPrice productPrice);
+    void add(ProductPrice productPrice);
 
     @Update("UPDATE product_price SET value=#{price},product_id=#{productId} WHERE id=#{id}")
-    public void update(ProductPrice productPrice);
+    void update(ProductPrice productPrice);
 
     @Delete("DELETE FROM product_price WHERE id=#{id}")
-    public void delete(Long id);
+    void delete(Long id);
 
     @Select("SELECT * FROM product_price WHERE id=#{id}")
-    public ProductPrice findById(Long id);
+    ProductPrice findById(Long id);
+
+    @Select("SELECT * FROM product_price WHERE product_id=#{productId}")
+    ProductPrice findByProductId(Long productId);
 
 }

@@ -4,12 +4,14 @@ import com.roncoo.eshop.inventory.model.ProductInventory;
 
 public interface ProductInventoryService {
 
-    public void add(ProductInventory productInventory);
+    void add(ProductInventory productInventory);
 
-    public void update(ProductInventory productInventory);
+    void update(ProductInventory productInventory);
 
-    public void delete(Long id);
+    void delete(Long id);
 
-    public ProductInventory findById(Long id);
+    ProductInventory findById(Long id);
+
+    ProductInventory findByProductId(Long productId);
 
 }

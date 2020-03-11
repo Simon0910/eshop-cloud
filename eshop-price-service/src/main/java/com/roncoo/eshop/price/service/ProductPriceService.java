@@ -4,12 +4,14 @@ import com.roncoo.eshop.price.model.ProductPrice;
 
 public interface ProductPriceService {
 
-    public void add(ProductPrice productPrice);
+    void add(ProductPrice productPrice);
 
-    public void update(ProductPrice productPrice);
+    void update(ProductPrice productPrice);
 
-    public void delete(Long id);
+    void delete(Long id);
 
-    public ProductPrice findById(Long id);
+    ProductPrice findById(Long id);
+
+    ProductPrice findByProductId(Long productId);
 
 }
