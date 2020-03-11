@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# Simple Redis init.d script conceived to work on Linux systems
+# as it does use of the /proc filesystem.
+
+# chkconfig:   2345 90 10
+
+# description:  Redis is a persistent key-value database
+
+REDISPORT1=7001
+REDISPORT2=7002
+REDISPORT3=7011
+REDISPORT4=7022
+EXEC=/usr/local/redis/bin/redis-server
+CLIEXEC=/usr/local/redis/bin/redis-cli
+
+PIDFILE=/var/run/redisc_7000.pid
+CONF1="/etc/redis/${REDISPORT1}.conf"
+CONF2="/etc/redis/${REDISPORT2}.conf"
+CONF3="/etc/redis/${REDISPORT3}.conf"
+CONF4="/etc/redis/${REDISPORT4}.conf"
+
+case "$1" in
+    start)
+        if [ -f $PIDFILE ]
+        then
+                echo "$PIDFILE exists, process is already running or crashed"
+        else
+                echo "Starting Redis cluster server..."
+                $EXEC $CONF1 &
+                $EXEC $CONF2 &
+                $EXEC $CONF3 &
+                $EXEC $CONF4 &
+                echo "reids master-slave start finshed..."
+        fi
+        ;;
+    stop)
+        if [ ! -f $PIDFILE ]
+        then
+                echo "$PIDFILE does not exist, process is not running"
+        else
+                PID=$(cat $PIDFILE)
+                echo "Stopping ..."
+                $CLIEXEC -p $REDISPORT1 shutdown
+                $CLIEXEC -p $REDISPORT2 shutdown
+                $CLIEXEC -p $REDISPORT3 shutdown
+                $CLIEXEC -p $REDISPORT4 shutdown
+                while [ -x /proc/${PID} ]
+                do
+                    echo "Waiting for Redis cluster to shutdown ..."
+                    sleep 2
+                done
+                echo "Redis cluster stopped"
+        fi
+        ;;
+    *)
+        echo "Please use start or stop as first argument"
+        ;;
+esac

@@ -1,0 +1,41 @@
+cd /usr/detail/lualib/resty
+
+1. 支持http:
+
+wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http_headers.lua  
+wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http.lua
+
+2. 缓存
+
+nginx.conf中：
+vim /usr/servers/distribution_nginx/nginx/conf/nginx.conf
+
+	lua_shared_dict my_cache 128m;
+
+
+3. 支持动态渲染网页模板:
+
+cd /usr/detail/lualib/resty
+
+
+wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template.lua
+
+mkdir -p /usr/detail/lualib/resty/html
+cd /usr/detail/lualib/resty/html
+wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template/html.lua
+
+在application.conf 配置模板位置
+vim /usr/detail/application/application.conf
+	set $template_location "/templates";  
+	set $template_root "/usr/detail/templates";
+
+mkdir -p /usr/detail/templates
+cd /usr/detail/templates
+vim product.html
+
+
+/usr/servers/distribution_nginx/nginx/sbin/nginx -t
+/usr/servers/distribution_nginx/nginx/sbin/nginx -s reload
+
+3 redis库
+

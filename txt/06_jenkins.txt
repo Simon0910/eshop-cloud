@@ -1,0 +1,180 @@
+参考: https://www.cnblogs.com/mmzs/p/12092982.html
+
+https://mirrors.cloud.tencent.com/
+https://developer.aliyun.com/mirror/
+https://mirrors.huaweicloud.com/
+
+1.导入镜像
+
+wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+
+2.导入公钥
+
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+
+3 安装jenkins：
+
+yum install jenkins 或者
+
+mkdir -p /usr/local/cloud/jenkins
+rpm -ivh jenkins-2.225-1.1.noarch.rpm
+
+whereis jenkins
+
+	WAR包 
+	ll /usr/lib/jenkins/jenkins.war  
+
+	配置文件, 修改用户为:root
+	vim /etc/sysconfig/jenkins  
+
+	默认的JENKINS_HOME目录
+	ll /var/lib/jenkins/       
+
+	日志文件
+	less /var/log/jenkins/jenkins.log
+
+	# 缓存
+	/var/cache/jenkins
+
+
+4. 修改配置文件
+====================================
+vim /etc/sysconfig/jenkins
+
+	JENKINS_PORT="8090"
+
+which java 或者 echo $JAVA_HOME 查看java路径
+
+vim /etc/init.d/jenkins 
+	/usr/bin/java ==> /usr/java/jdk1.8.0/bin/java
+
+vim /var/lib/jenkins/updates/default.json
+
+	http://www.google.com/ ==> {"connectionCheckUrl":"http://www.baidu.com/"
+====================================
+
+5. 重启并查看 jenkins 状态
+
+	1.
+	systemctl daemon-reload
+
+	2.
+	service jenkins start
+	service jenkins stop
+
+	3. 查看
+	systemctl status jenkins
+
+
+	systemctl stop jenkins
+	systemctl restart jenkins
+
+	ps -ef|grep jenkins
+
+
+6. 测试
+
+ http://192.168.198.150:8090
+
+密码在这个路径：cat /var/lib/jenkins/secrets/initialAdminPassword
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+jenkins实例似乎已离线 问题解决
+
+	方案一
+
+	http://192.168.198.150:8080/jenkins/pluginManager/advanced 或者
+	http://192.168.198.150:8080/pluginManager/advanced 或者
+
+
+	Update Site:
+
+		
+		http://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json
+
+	Submit -> Check now
+
+	方案二
+
+		vim /var/lib/jenkins/hudson.model.UpdateCenter.xml
+
+		https://jenkins-zh.gitee.io/update-center-mirror/tsinghua/update-center.json
+		http://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json
+
+		service jenkins stop
+		service jenkins start
+
+
+		cat /var/lib/jenkins/secrets/initialAdminPassword
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+使用部分:
+
+7. jenkins语言为中文
+		http://updates.jenkins-ci.org/download/plugins/ 
+		https://plugins.jenkins.io/ 
+
+		Locale Plugin插件
+
+		默认插件:
+			Folders Plugin
+			Timestamper
+			Pipeline
+			Subversion Plug-in
+			LDAP Plugin
+
+			OWASP Markup Formatter Plugin
+			Workspace Cleanup Plugin
+			GitHub Organization Folder Plugin
+			SSH Slaves plugin
+			Email Extension Plugin
+
+			build timeout plugin
+			Ant Plugin
+			Pipeline: Stage View Plugin
+			Matrix Authorization Strategy Plugin
+			Mailer Plugin
+
+			Credentials Binding Plugin
+			Gradle Plugin
+			Git plugin
+			PAM Authentication plugin
+
+8. admin admin 记住密码
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+9.
+卸载 rpm
+
+	1)查看xxx安装情况
+
+	rpm -qa | grep -i jenkins
+
+	2) 停止运行xxx
+
+	service xxx stop
+	systemctl stop jenkins
+
+	3) 删除
+
+	 rpm -e 文件名
+
+	 rm -rf /etc/init.d/jenkins.rpmsave 
+
+	4) 删除相关的
+
+	find / -name jenkins 
+	rm -rf /var/lib/jenkins/ /var/log/jenkins/ /var/cache/jenkins/
+
+	5) 删除配置文件
+	rm -rf /etc/sysconfig/jenkins.rpmsave
+
+	6) 查看处理后结果
+
+	rpm -qa | grep -i jenkins
+	没有查找到文件说明删除成功。

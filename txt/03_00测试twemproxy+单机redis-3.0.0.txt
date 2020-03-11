@@ -1,0 +1,75 @@
+
+1、部署单机redis
+
+yum install gcc-c++
+
+redis-3.0.0.tar.gz
+
+cd /usr/local/
+
+tar -zxvf redis-3.0.0.tar.gz
+
+rm -rf redis-3.0.0.tar.gz 
+
+cd redis-3.0.0/
+
+make
+
+make install PREFIX=/usr/local/redis
+
+cp /usr/local/redis-3.0.0/redis.conf /usr/local/redis/bin
+
+cd /usr/local/redis
+
+./bin/redis-server（服务前端启动）
+
+./bin/redis-cli
+ping
+
+./bin/redis-cli shutdown（服务关闭）
+
+
+=======================================================
+
+2、twemproxy单机部署
+
+yum install -y autoconf automake libtool
+
+cd twemproxy-0.4.0
+
+autoreconf -fvi
+
+./configure && make
+
+cp /usr/local/twemproxy-0.4.0/conf/nutcracker.yml /usr/local/twemproxy-0.4.0/conf/nutcracker.yml.backup
+
+vim /usr/local/twemproxy-0.4.0/conf/nutcracker.yml  
+`````````````````````````````````
+redis-maser:  
+  listen: 127.0.0.1:1111  
+  hash: fnv1a_64  
+  distribution: ketama  
+  redis: true  
+  servers:  
+   - 192.168.198.150:7001:1 redis01
+   - 192.168.198.150:7002:1 redis02
+
+redis-slave:  
+  listen: 127.0.0.1:1112  
+  hash: fnv1a_64  
+  distribution: ketama  
+  redis: true  
+  servers:  
+   - 192.168.198.150:7003:1 redis01
+   - 192.168.198.150:7004:1 redis02
+
+`````````````````````````````````
+
+/usr/local/twemproxy-0.4.0/src/nutcracker -d -c /usr/local/twemproxy-0.4.0/conf/nutcracker.yml 
+
+
+ps -aux | grep nutcracker
+
+pkill nutcracker
+
+/usr/local/redis/bin/redis-cli -h 192.168.198.150 -p 1111  

@@ -1,0 +1,24 @@
+
+模拟部署redis集群
+		机房A			   机房B
+master1 -> salve1 -> | salve3 -> salve5 
+master2 -> salve2 -> | salve4 -> salve6
+
+ 
+1.
+
+slaved上配置：slaveof host port
+或者
+slaved上执行: slaveof 192.168.198.150 7001
+
+2.
+
+bind 本机ip
+
+3. info replication
+
+
+/usr/local/redis/bin/redis-cli -p 7001 shutdown
+/usr/local/redis/bin/redis-cli -p 7002 shutdown
+/usr/local/redis/bin/redis-cli -p 7011 shutdown
+/usr/local/redis/bin/redis-cli -p 7022 shutdown

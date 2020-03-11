@@ -1,0 +1,84 @@
+参考: https://blog.csdn.net/lyelyelye/article/details/54016776
+
+ (1) 复制 redis-3.0.0/utils/redis_init_script -> /etc/init.d/redis_6379
+ 	 cp /usr/local/redis-3.0.0/utils/redis_init_script /etc/init.d/redis_7003
+
+ (2) 修改redis_6379脚本的第6行的REDISPORT，设置为相同的端口号（默认就是6379）
+ 	 vim /etc/init.d/redis_7003
+ 	 cp /etc/init.d/redis_7003 /etc/init.d/redis_7004
+ 	 vim /etc/init.d/redis_7004
+ (3) 修改启动脚本
+ 		exec=/路径/redis-server
+ 		cliexec=/路径/redis-cli
+（4）创建两个目录：
+		/etc/redis  	（存放redis的配置文件），
+		/var/redis/6379	（存放redis的持久化文件）
+
+		mkdir -p /var/redis/7003
+		mkdir -p /var/redis/7004
+		mkdir -p /etc/redis
+		cp /usr/local/redis-3.0.0/redis.conf /etc/redis/7003.conf
+
+ (5) 修改配置文件redid.conf
+ 		daemonize	yes							让redis以daemon进程运行
+		pidfile		/var/run/redis_6379.pid 	设置redis的pid文件位置
+		port		6379						设置redis的监听端口号
+		dir 		/var/redis/6379				设置持久化文件的存储位置
+
+ (6)
+		chmod 755 /etc/init.d/redis_6379
+		/etc/init.d/redis_6379 start
+
+		/usr/local/redis/bin/redis-cli -p 7001 shutdown
+		/usr/local/redis/bin/redis-cli -p 7002 shutdown
+		/usr/local/redis/bin/redis-cli -p 7011 shutdown
+		/usr/local/redis/bin/redis-cli -p 7022 shutdown
+
+ (7)	让redis跟随系统启动自动启动
+
+ 		脚本代码的上面，注释的下面 加入两行注释
+
+		# chkconfig:   2345 90 10
+
+		# description:  Redis is a persistent key-value database
+
+ (8) 	
+		#注册为服务
+		chkconfig --add redis_6379
+		#设置为开机自启动服务器
+		chkconfig redis_6379 on
+		#设置为开机不启动
+		chkconfig redis_6379 off
+		#打开服务
+		service redis_6379 start
+		#关闭服务
+		service redis_6379 stop
+		查看
+		chkconfig --list
+
+
+3、刷新配置
+刚刚配置的服务需要让systemctl能识别，就必须刷新配置
+systemctl daemon-reload
+
+
+4、启动、重启、停止
+启动redis
+systemctl start redis
+systemctl restart redis
+systemctl stop redis
+
+
+5、开机自启动
+
+redis服务加入开机启动
+systemctl enable redis
+禁止开机启动
+systemctl disable redis_7001
+systemctl disable redis_7002
+systemctl disable redis_7011
+systemctl disable redis_7022
+
+
+6、查看状态
+systemctl status redis_7001

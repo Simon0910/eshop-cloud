@@ -1,0 +1,43 @@
+1
+#注册为服务
+chkconfig --add redis_6379
+#设置为开机自启动服务器
+chkconfig redis_6379 on
+#设置为开机不启动
+chkconfig redis_6379 off
+#打开服务
+service redis_6379 start
+#关闭服务
+service redis_6379 stop
+查看
+chkconfig --list
+
+
+2、
+刷新配置
+刚刚配置的服务需要让systemctl能识别，就必须刷新配置
+systemctl daemon-reload
+
+
+3、启动、重启、停止
+启动redis
+systemctl start redis
+systemctl restart redis
+systemctl stop redis
+
+
+4、
+
+开机自启动
+
+redis服务加入开机启动
+systemctl enable redis
+禁止开机启动
+systemctl disable redis_7001
+systemctl disable redis_7002
+systemctl disable redis_7011
+systemctl disable redis_7022
+
+
+6、查看状态
+systemctl status redis_7001

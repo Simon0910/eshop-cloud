@@ -1,0 +1,31 @@
+netstat -tlunp
+
+这个命令会显示出当前主机打开的所有端口
+
+
+
+
+1.
+
+firewall-cmd --permanent --add-port=5672/tcp
+
+firewall-cmd --reload
+
+setsebool -P nis_enabled 1 （关闭selinux）
+
+2.粗暴的方法
+
+systemctl stop firewalld
+
+systemctl disable firewalld
+
+setenforce 0 （记得/etc/selinux/config也改成 disable，否则重启就不生效了）
+
+查看selinux状态
+
+/usr/sbin/sestatus -v
+
+SELinux status: disabled
+————————————————
+版权声明：本文为CSDN博主「DeBuggggggg」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/u013294097/article/details/89959990

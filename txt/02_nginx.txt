@@ -1,0 +1,100 @@
+1、部署第一个nginx
+
+
+（1）部署openresty
+
+yum install -y readline-devel pcre-devel openssl-devel gcc
+
+mkdir -p /usr/servers/distribution_nginx  
+cd /usr/servers/distribution_nginx
+
+wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
+tar -xzvf openresty-1.15.8.2.tar.gz
+rm -rf openresty-1.15.8.2.tar.gz
+cd /usr/servers/distribution_nginx/openresty-1.15.8.2/bundle/LuaJIT-2.1-20190507
+make clean && make && make install  
+根据最后日志提示
+ln -sf luajit-2.1.0-beta3 /usr/local/bin/luajit
+
+cd /usr/servers/distribution_nginx/openresty-1.15.8.2/bundle
+wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz
+wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz 
+
+tar -zxvf 2.3.tar.gz
+tar -xvf v0.3.0.tar.gz 
+
+cd /usr/servers/distribution_nginx/openresty-1.15.8.2
+
+./configure --prefix=/usr/servers/distribution_nginx --with-http_realip_module --with-pcre --with-luajit --add-module=./bundle/ngx_cache_purge-2.3/ --add-module=./bundle/nginx_upstream_check_module-0.3.0/ -j2
+
+gmake && gmake install
+
+ 
+/usr/servers/distribution_nginx/nginx/sbin/nginx -v
+/usr/servers/distribution_nginx/nginx/sbin/nginx -V
+/usr/servers/distribution_nginx/nginx/sbin/nginx
+/usr/servers/distribution_nginx/nginx/sbin/nginx -s stop
+/usr/servers/distribution_nginx/nginx/sbin/nginx -s reload
+ps -ef|grep nginx
+
+==========================================================
+yum install vim
+
+（2）nginx+lua开发的
+
+模拟a机房分发层nginx 80 和 应用成nginx 8000
+mkdir -p /usr/detail/distribution/lua
+mkdir -p /usr/detail/application/lua
+cp -r /usr/servers/distribution_nginx/lualib /usr/detail/
+
+vim /usr/servers/distribution_nginx/nginx/conf/nginx.conf
+
+在http部分添加：
+
+lua_package_path "/usr/detail/lualib/?.lua;;";  
+lua_package_cpath "/usr/detail/lualib/?.so;;";  
+lua_shared_dict my_cache 128m;
+include /usr/detail/distribution/distribution.conf;
+include /usr/detail/application/application.conf;
+
+vim /usr/detail/distribution/distribution.conf
+
+server {  
+    listen       80;  
+    server_name  _;  
+  
+    location /product {  
+        default_type 'text/html';  
+        # lua_code_cache off;  
+        content_by_lua_file /usr/detail/distribution/lua/distribution.lua;  
+    }  
+
+}  
+
+vim /usr/detail/distribution/lua/distribution.lua
+ngx.say("distribution")
+
+vim /usr/detail/application/application.conf
+
+server {  
+    listen       8000;  
+    server_name  _;  
+  
+    location /product {  
+        default_type 'text/html';  
+        # lua_code_cache off;  
+        content_by_lua_file /usr/detail/application/lua/application.lua;  
+    }  
+
+}  
+
+vim /usr/detail/application/lua/application.lua
+ngx.say("application")
+
+
+/usr/servers/distribution_nginx/nginx/sbin/nginx -t
+/usr/servers/distribution_nginx/nginx/sbin/nginx -s reload
+/usr/servers/distribution_nginx/nginx/sbin/nginx -s stop
+/usr/servers/distribution_nginx/nginx/sbin/nginx
+------------------
+模拟b机房分发层nginx 80 和 应用成nginx 8000 (同上)
