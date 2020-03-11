@@ -1,17 +1,18 @@
 package com.roncoo.eshop.datasync.service;
 
+import com.roncoo.eshop.datasync.service.fallback.EshopProductServiceFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "eshop-product-service")
+@FeignClient(value = "eshop-product-service", fallback = EshopProductServiceFallback.class)
 public interface EshopProductService {
 
     @RequestMapping(value = "/brand/findById", method = RequestMethod.GET)
     String findBrandById(@RequestParam(value = "id") Long id);
 
-    @RequestMapping(value = "/brand/findByIds",method = RequestMethod.GET)
+    @RequestMapping(value = "/brand/findByIds", method = RequestMethod.GET)
     String findBrandByIds(@RequestParam(value = "ids") String ids);
 
     @RequestMapping(value = "/category/findById", method = RequestMethod.GET)
