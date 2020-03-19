@@ -3,6 +3,7 @@
 https://mirrors.cloud.tencent.com/
 https://developer.aliyun.com/mirror/
 https://mirrors.huaweicloud.com/
+http://uni.mirrors.163.com/
 
 1.导入镜像
 
